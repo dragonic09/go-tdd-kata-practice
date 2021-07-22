@@ -2,11 +2,12 @@ package queue
 
 import (
 	"data-structure-kata/node"
+	"errors"
 )
 
 type IQueue interface {
 	Enqueue(value interface{})
-	//Dequeue() (interface{}, error)
+	Dequeue() (interface{}, error)
 	Peek() interface{}
 	IsEmpty() bool
 }
@@ -16,8 +17,8 @@ type Queue struct {
 }
 
 func (queue *Queue) Enqueue(value interface{}) {
+	currentNode := queue.headNode
 	for {
-		currentNode := queue.headNode
 		if currentNode == nil {
 			queue.headNode = &node.Node{Value: value}
 			break
@@ -30,6 +31,17 @@ func (queue *Queue) Enqueue(value interface{}) {
 		currentNode = currentNode.Next
 	}
 }
+
+func (queue *Queue) Dequeue() (interface{}, error) {
+	if queue.headNode == nil {
+		return nil, errors.New("Queue is empty")
+	}
+	firstValue := queue.headNode.Value
+	queue.headNode = queue.headNode.Next
+
+	return firstValue, nil
+}
+
 
 func (queue *Queue) Peek() interface{} {
 	if queue.headNode == nil {

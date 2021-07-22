@@ -19,6 +19,7 @@ func TestEnQueueAddValuesToQueue(t *testing.T) {
 	queue := Queue{}
 	queue.Enqueue(10)
 	queue.Enqueue(20)
+	queue.Enqueue(30)
 	if queue.headNode == nil || queue.headNode.Next == nil {
 		t.Errorf("Queue should have 2 elements after enqueue to times")
 	}
@@ -81,3 +82,48 @@ func TestIsEmptyOnQueue(t *testing.T) {
 		t.Errorf("Queue should have the same values after IsEmpty(). ")
 	}
 }
+
+func TestDequeueOnEmptyQueue(t *testing.T) {
+	queue := Queue{}
+	_, err  := queue.Dequeue()
+	if err == nil {
+		t.Errorf("Dequeue() on an empty queue should return an error.")
+	}
+}
+
+func TestDequeueOnQueueShouldReturnTheFirstValue(t *testing.T) {
+	queue := Queue{}
+	queue.Enqueue(10)
+	queue.Enqueue(20)
+	queue.Enqueue(30)
+	value, err := queue.Dequeue()
+	if err != nil {
+		t.Errorf("Dequeue() on a non-empty queue should return error as nil.")
+	}
+
+	if value != 10 {
+		t.Errorf("Dequeue() on a non-empty queue should return the first value.")
+	}
+}
+
+func TestDequeueOnQueueShouldRemoveFirstValueAndMoveNextValueToFirstValue(t *testing.T) {
+	queue := Queue{}
+	queue.Enqueue(10)
+	queue.Enqueue(20)
+	queue.Enqueue(30)
+	queue.Dequeue()
+	if queue.headNode.Value != 20 {
+		t.Errorf("Queue should pop 10 out of the queue and have 20 as the first value after Dequeue().")
+	}
+}
+
+
+func TestDequeueOnQueueWithSingleValueQueueShouldBeEmpty(t *testing.T) {
+	queue := Queue{}
+	queue.Enqueue(10)
+	queue.Dequeue()
+	if queue.headNode != nil {
+		t.Errorf("Queue should be empty if Dequeque() is called on a queue with a single value.")
+	}
+}
+
